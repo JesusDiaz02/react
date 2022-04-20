@@ -33,7 +33,7 @@ const Formulario =()=>{
                             <li className="list-group-item" key={index}>
                                 <span className="lead">{item.nombreFruta}-{item.nombreDescripcion}</span>
                                 <button className="btn btn-danger btn-sm float-end mx-2">Eliminar</button>
-                                <button className="btn btn-warning btn-sm fload-end">Editar</button> 
+                                <button className="btn btn-warning btn-sm float-end">Editar</button> 
                             </li>
                         ))
                 }
