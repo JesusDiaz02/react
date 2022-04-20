@@ -28,34 +28,37 @@ const Formulario =()=>{
                 <div className="col-8">
                     <h4 className="text-center">Listado de frutas</h4>
                     <ul className="list-group">
-                    {
-                     lista.map((item, index)=>(
-                        <li key={index}>
-                             <h4>{item.nombreFruta}-{item.nombreDescripcion}</h4>
-                         </li>
-                     ))
+                {
+                        lista.map((item, index)=>(
+                            <li className="list-group-item" key={index}>
+                                <span className="lead">{item.nombreFruta}-{item.nombreDescripcion}</span>
+                                <button className="btn btn-danger btn-sm float-end mx-2">Eliminar</button>
+                                <button className="btn btn-warning btn-sm fload-end">Editar</button> 
+                            </li>
+                        ))
                 }
-
                     </ul>
                 </div>
-            </div>
-            <form onSubmit={guardarDatos}>
-                <input
-                type="text"
-                placeholder="Ingrese Frutas"
-                onChange={(e)=>setFruta(e.target.value)}
-                />
-                    
-                <input
-                type="text"
-                placeholder="Ingrese descripcion"
-                onChange={(e)=>setDescripcion(e.target.value)}
-                />
-                <button type="submit">Agregar</button>
-            </form>
-            <ul>
-                
-            </ul>
+                <div className="col-4">
+                    <h4 className="text-center">Agregar Frutas</h4>
+                    <form onSubmit={guardarDatos}>
+                        <input
+                            className="form-control mb-2"
+                            type="text"
+                            placeholder="Ingrese Frutas"
+                            onChange={(e)=>setFruta(e.target.value)}
+                        />
+                            
+                        <input
+                            className="form-control mb-2"
+                            type="text"
+                            placeholder="Ingrese descripcion"
+                            onChange={(e)=>setDescripcion(e.target.value)}
+                        />
+                        <button className="btn btn-primary btn-block" type="submit">Agregar</button>
+                    </form>
+                </div>
+            </div>         
         </div>
     )
 }
