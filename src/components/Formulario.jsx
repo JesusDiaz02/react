@@ -6,7 +6,9 @@ const Formulario =()=>{
     const[fruta, setFruta] = React.useState('')
     const[descripcion, setDescripcion]=React.useState('')
     const[lista, setLista]= React.useState([])
-    //const [id, setId]=React.useState('')
+    const[modoEdicion, setModoEdicion]= React.useState(false)
+    const [id, setId]=React.useState('')
+    const[error,setError]=React.useState(null)
 
     React.useEffect(()=>{
         const obtenerDatos = async ()=>{
@@ -29,12 +31,13 @@ const Formulario =()=>{
     const guardarDatos= async (e)=>{
         e.preventDefault()
         if(!fruta.trim()){
-            return alert('campo fruta vacio')
+            setError('campo fruta vacio')
+            return
             
         }
         if(!descripcion.trim()){
-            return alert('campo descripcion vacio')
-             
+            setError('campo descripcion vacio')
+             return
         }
         try{
             const db =firebase.firestore()
@@ -49,6 +52,10 @@ const Formulario =()=>{
         }catch(error){
             console.log(error)
         }
+        setModoEdicion(false)
+        setFruta('')
+        setDescripcion('')
+        setError(null)
         
     }
     const eliminar=async(id)=>{
@@ -60,7 +67,49 @@ const Formulario =()=>{
         } catch (error) {
             console.log(error)
         }
+       
+        }
+        const auxEditar = (item)=>{
+            setFruta(item.nombreFruta)
+            setDescripcion(item.nombreDescripcion)
+            setModoEdicion(true)
+            setId(item.id)
     }
+    const editar=async e=>{
+        e.preventDefault()
+        if(!fruta.trim()){
+            setError('campo fruta vacio')
+            return
+            
+        }
+        if(!descripcion.trim()){
+            setError('campo descripcion vacio')
+             return
+        }
+        try {
+            const db=firebase.firestore()
+            await db.collection('frutas').doc(id).update({
+                nombreFruta:fruta,
+                nombreDescripcion:descripcion
+            })
+            
+        } catch (error) {
+            console.log(error)
+        }
+        setModoEdicion(false)
+        setFruta('')
+        setDescripcion('')
+        setError(null)
+    }
+
+    const cancelar =()=>{
+        setModoEdicion(false)
+        setFruta('')
+        setDescripcion('')
+        setError(null)
+    }
+
+    
     return(
         <div className="container mt-5">
             <h1 className="text-center">CRUD BASICO REACT</h1>
@@ -74,20 +123,28 @@ const Formulario =()=>{
                             <li className="list-group-item" key={item.id}>
                                 <span className="lead">{item.nombreFruta}-{item.nombreDescripcion}</span>
                                 <button className="btn btn-danger btn-sm float-end mx-2"onClick={()=>eliminar(item.id)}>Eliminar</button>
-                                <button className="btn btn-warning btn-sm float-end">Editar</button> 
+                                <button className="btn btn-warning btn-sm float-end"onClick={()=>auxEditar(item)}>Editar</button> 
                             </li>
                         ))
                 }
                     </ul>
                 </div>
                 <div className="col-4">
-                    <h4 className="text-center">Agregar Frutas</h4>
-                    <form onSubmit={guardarDatos}>
+                    <h4 className="text-center">
+                        {
+                           modoEdicion ? 'Editar Frutas':'Agregar Frutas'     
+
+                        }</h4>
+                    <form onSubmit={modoEdicion ? editar: guardarDatos}>
+                        {
+                            error ? <span className="text-danger">{error}</span>:null
+                        }
                         <input
                             className="form-control mb-2"
                             type="text"
                             placeholder="Ingrese Frutas"
                             onChange={(e)=>setFruta(e.target.value)}
+                            value={fruta}
                         />
                             
                         <input
@@ -95,8 +152,22 @@ const Formulario =()=>{
                             type="text"
                             placeholder="Ingrese descripcion"
                             onChange={(e)=>setDescripcion(e.target.value)}
+                            value={descripcion}
                         />
-                        <button className="btn btn-primary btn-block" type="submit">Agregar</button>
+                        {
+                            !modoEdicion?(
+                                <button className="btn btn-primary btn-block" type="submit">Agregar</button>
+                            )
+                            :
+                            (<>
+
+                            <button className="btn btn-warning btn-block" type="submit">Editar</button>
+                            <button className="btn btn-dark btn-block mx-2" onClick={()=>cancelar}>Cancelar</button>
+                            </>
+                            )
+                        }
+                        
+                        
                     </form>
                 </div>
             </div>         
