@@ -13,7 +13,7 @@ const Formulario =()=>{
         }
         if(!descripcion.trim()){
             return alert('campo descripcion vacio')
-            
+             
         }
         setLista([...lista,
             {nombreFruta: fruta, nombreDescripcion: descripcion}
@@ -21,8 +21,24 @@ const Formulario =()=>{
     }
 
     return(
-        <div>
-            <h2>Formulario</h2>
+        <div className="container mt-5">
+            <h1 className="text-center">CRUD BASICO REACT</h1>
+            <hr/>
+            <div className="row">
+                <div className="col-8">
+                    <h4 className="text-center">Listado de frutas</h4>
+                    <ul className="list-group">
+                    {
+                     lista.map((item, index)=>(
+                        <li key={index}>
+                             <h4>{item.nombreFruta}-{item.nombreDescripcion}</h4>
+                         </li>
+                     ))
+                }
+
+                    </ul>
+                </div>
+            </div>
             <form onSubmit={guardarDatos}>
                 <input
                 type="text"
@@ -38,13 +54,7 @@ const Formulario =()=>{
                 <button type="submit">Agregar</button>
             </form>
             <ul>
-                {
-                     lista.map((item, index)=>(
-                        <li key={index}>
-                             <h4>{item.nombreFruta}-{item.nombreDescripcion}</h4>
-                         </li>
-                     ))
-                }
+                
             </ul>
         </div>
     )
